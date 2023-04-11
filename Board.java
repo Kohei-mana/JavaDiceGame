@@ -3,7 +3,7 @@ import java.io.BufferedWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
 
-public class Board {
+public class abstract Board {
     //GameクラスのsetBoardメソッドで呼び出されたら、csv形式のすごろくファイルを出力する
     public static void main(String args[]) {
         String[] masu = {"_","_","_","_"};
