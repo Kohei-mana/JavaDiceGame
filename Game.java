@@ -21,7 +21,7 @@ class Game {
     public static void main(String[] args) {
 
     }
-    //
+
     public void setBoard(int size, String filename) {
         //引数sizeの大きさで、引数filenameのcsvファイルをつくる処理
         try {
@@ -55,18 +55,21 @@ class Game {
         this.players.add(name);
         
 
+
     }
     public static void setDice() {
         //出た目の記録をboard.csvに書き込み
         // int dice = new java.util.Random().nextInt(6);
         // dice++;
     }
+
     //ゲーム実行
     public void start(int goal){
         // System.out.println(players.get(0));
         // System.out.println("今の位置は" + position[0] + "です");
         System.out.println("ゴールは" + goal + "です。");
-        while (this.position[0] < goal || this.position[1] < goal) {
+        
+        while (this.position[0] < goal && this.position[1] < goal) {
             for(int i=0; i<2; i++) {
                 System.out.println('\n');
                 System.out.println(players.get(i) + "さん、サイコロを振ってください");
@@ -91,50 +94,6 @@ class Game {
         }
         
             }
-            
-        //     System.out.println(players.get(0) + "さん、サイコロを振ってください");
-        //     //エンターキーを押して次に進む処理
-        //     //サイコロの出た目を出力する処理
-        //     int dice = this.dc.throwDice();
-        //     System.out.println(dice + "がでました。");
-        //     //出た目の数だけプレイヤーのポジションを進める処理
-
-        //     //プレイヤーの位置を出力
-        //     this.position[0] = this.position[0] + dice;
-        //     System.out.println("今の位置は" + position[0] + "です");
-        //     //先にゴールに到達したプレイヤーの勝利を出力する処理
-        //     //addPlayerで作成したリストの順番を進める処理
-        //     if(this.position[0]>20) {
-        //         break;
-        //     }
-        // }
-        // System.out.println(players.get(0) + "さんの勝利");
-
-        
-        // for(int i=0; i<10; i++) {
-        //     //
-        //     System.out.println("サイコロを振ってください");
-        //     //エンターキーを押して次に進む処理
-        //     //サイコロの出た目を出力する処理
-        //     int dice = this.dc.throwDice();
-        //     System.out.println(dice + "がでました。");
-        //     //出た目の数だけプレイヤーのポジションを進める処理
-
-        //     //プレイヤーの位置を出力
-        //     this.position = this.position + dice;
-        //     System.out.println("今の位置は" + position + "です");
-        //     //先にゴールに到達したプレイヤーの勝利を出力する処理
-        //     //addPlayerで作成したリストの順番を進める処理
-        // }
-        
-
-        //繰り返し
-            // プレイヤーがダイスを投げる処理
-            //出た目の数だけプレイヤーのポジションを進める処理
-            //addPlayerで作成したリストの順番を進める処理
-        //ループの終了
-        //先にゴールに到達したプレイヤーの勝利を出力する処理
-
 
        }
 }
