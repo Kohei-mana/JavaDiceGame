@@ -1,20 +1,19 @@
-// Your First Program
 
 class Main {
     public static void main(String[] args) {
 
         Game game = new Game();
-        // game.setBoard(20, "abc.csv");
+        game.setBoard("board.csv", 15);
         game.addPlayer("Taro");
         game.addPlayer("Jiro");
         // game.setDice();
-        game.start(15);
+        game.start();
 
-        // game = Game.new
-        // game.setBoard(Board.new("board.csv"))
-        // game.addPlayer(Player.new("Taro"))
-        // game.addPlayer(Player.new("Jiro"))
-        // game.setDice(Dice.new)
-        // game.start
+
+        // System.out.println(game.masuList.size());
+        // System.out.println(game.players.get(0).name);
+        // System.out.println(game.players.get(0).position);
+        // System.out.println(game.players.get(1).name);
+        // System.out.println(game.players.get(1).position);
     }
 }
