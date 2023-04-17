@@ -1,8 +1,8 @@
 public class Dice {
+    int diceNum;
     //サイコロをふるメソッド
-    public int throwDice() {
-        int dice = new java.util.Random().nextInt(6);
-        dice ++;
-        return dice;
+    public void throwDice() {
+        this.diceNum = new java.util.Random().nextInt(6);
+        diceNum++;
     }
 }

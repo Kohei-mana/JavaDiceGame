@@ -1,140 +1,117 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-// import java.util.List;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
 
 class Game {
+    Board b = new Board();
     //ENTERキー
     Scanner scan = new Scanner(System.in);
-    //プレイヤーの配列を定義。
-    ArrayList<String> players = new ArrayList<String>();
-    //プレイヤーの位置の配列を定義
-    int[] position = {0,0};
-    //サイコロを振るメソッドの定義
+    //
+    ArrayList<Integer> masuList = b.intLi;
+    //プレイヤーの配列を定義
+    ArrayList<Player> players = new ArrayList<Player>();
+    //サイコロインスタンスの生成
     Dice dc = new Dice();
-    
-
 
     public static void main(String[] args) {
-
     }
-    //
-    public void setBoard(int size, String filename) {
-        //引数sizeの大きさで、引数filenameのcsvファイルをつくる処理
+
+    public void setBoard(String filename, int size) {
+        //引数sizeの大きさで、引数filenameのcsvファイルを作成する処理
         try {
             FileWriter fw = new FileWriter(filename, false);
             PrintWriter pw = new PrintWriter(new BufferedWriter(fw));
 
-            //ヘッダーの設定
-            pw.print("ターン数");
-            pw.print(",");
-            pw.print("プレイヤー名");
-            pw.print(",");
-            pw.print("サイコロの目");
-            pw.print(",");
-            pw.print("今いるマス");
-            pw.print('\n');
-
             for(int i = 0; i < size; i++){
-                pw.print(i);
-                pw.print(" | ");
+                int masuEvent = new java.util.Random().nextInt(6)-2;
+                pw.print(masuEvent);
+                if(i<size-1){
+                    pw.print(",");
+                }
             }
-            pw.print('\n');
             pw.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
-
     public void addPlayer(String name) {
-        //Playerクラスで取得した名前をリストに格納、board.csvに書き込み
-        // this.players.add(name);
-        this.players.add(name);
-        
-
+        //生成したプレイヤーをプレイヤーの配列に格納する処理
+        Player p = new Player(name);
+        this.players.add(p);
     }
     public static void setDice() {
-        //出た目の記録をboard.csvに書き込み
-        // int dice = new java.util.Random().nextInt(6);
-        // dice++;
     }
+
     //ゲーム実行
-    public void start(int goal){
-        // System.out.println(players.get(0));
-        // System.out.println("今の位置は" + position[0] + "です");
-        System.out.println("ゴールは" + goal + "です。");
-        while (this.position[0] < goal || this.position[1] < goal) {
-            for(int i=0; i<2; i++) {
-                System.out.println('\n');
-                System.out.println(players.get(i) + "さん、サイコロを振ってください");
+    public void start(){
+        //作成したcsvファイルを整数型配列に格納する処理
+        this.b.csvToIntList();
+        int goal = masuList.size();
+
+        while(this.players.get(0).position<goal && this.players.get(1).position<goal){
+            //プレイヤーの入れ替え
+            for(int p=0; p<this.players.size(); p++){
+                System.out.println(this.players.get(p).name + "さんの現在の位置は" + this.players.get(p).position);
+                System.out.println(this.players.get(p).name + "さん、サイコロを振ってください");
+                //サイコロを投げる
                 scan.nextLine();
-            //エンターキーを押して次に進む処理
-            //サイコロの出た目を出力する処理
-            int dice = this.dc.throwDice();
-            System.out.println(dice + "がでました。");
-            //出た目の数だけプレイヤーのポジションを進める処理
-            //プレイヤーの位置を出力
-            this.position[i] = this.position[i] + dice;
-            System.out.println(players.get(i) + "の位置は" + position[i] + "です");
-            // if(this.position % 5 = 0) {
-
-            // }
-            //先にゴールに到達したプレイヤーの勝利を出力する処理
-            //addPlayerで作成したリストの順番を進める処理
-            if(this.position[i] >= goal) {
-                System.out.println('\n' + players.get(i) + "さんの勝利");
-                break;
+                dc.throwDice();
+                System.out.println(dc.diceNum + "がでました！" + dc.diceNum + "マス進みます");
+                this.players.get(p).position += dc.diceNum;
+                //
+                if(this.players.get(p).position > goal) {
+                    //サイコロで進んでゴールした場合
+                    System.out.println(this.players.get(p).name + "さんの勝利！");
+                    break;
+                } else {
+                    //サイコロで進んでマスに止まった場合
+                    System.out.println(this.players.get(p).name + "さんの現在の位置は" + this.players.get(p).position);
+                }
+                //止まったマス
+                int stopMasu = this.masuList.get(this.players.get(p).position-1);
+                this.players.get(p).position += stopMasu;
+                
+                if(stopMasu < this.players.get(p).position*-1) {
+                    //大幅なマイナスマスに止まった場合
+                    this.players.get(p).position = 0;
+                    System.out.println(stopMasu + "のマスにとまったので、" + stopMasu*-1 + "マス戻ります");
+                    System.out.println(this.players.get(p).name + "さんの現在の位置は" + this.players.get(p).position);
+                    System.out.println("プレイヤーを交代してください。");
+                    scan.nextLine();
+                    System.out.println("--------------------------------------------------------");
+                } else if(stopMasu > goal - this.players.get(p).position) {
+                    //大幅なプラスマスに止まった場合
+                    this.players.get(p).position = goal;
+                    System.out.println(stopMasu + "のマスにとまったので、" + stopMasu + "マス進みます");
+                    System.out.println(players.get(p).name + "さんの勝利！");
+                    break;
+                } else {
+                    if(stopMasu < 0) {
+                        //マイナスマスに止まった場合
+                        System.out.println(stopMasu + "のマスにとまったので、" + stopMasu*-1 + "マス戻ります");
+                    } else {
+                        //プラスマスに止まった場合
+                        System.out.println(stopMasu + "のマスにとまったので、" + stopMasu + "マス進みます");
+                    }
+                    
+                    if(players.get(p).position > goal){
+                        //プラスマスによって進んでゴールした場合
+                        System.out.println(this.players.get(p).name + "さんの勝利！");
+                        break;
+                    } else{
+                        //プラスマスによって進んでゴールしなかった場合
+                        System.out.println(this.players.get(p).name + "さんの現在の位置は" + this.players.get(p).position);
+                        System.out.println("プレイヤーを交代してください。");
+                        scan.nextLine();
+                        System.out.println("--------------------------------------------------------");
+                    }
+                }
             }
-        }
+        } 
         
-            }
-            
-        //     System.out.println(players.get(0) + "さん、サイコロを振ってください");
-        //     //エンターキーを押して次に進む処理
-        //     //サイコロの出た目を出力する処理
-        //     int dice = this.dc.throwDice();
-        //     System.out.println(dice + "がでました。");
-        //     //出た目の数だけプレイヤーのポジションを進める処理
-
-        //     //プレイヤーの位置を出力
-        //     this.position[0] = this.position[0] + dice;
-        //     System.out.println("今の位置は" + position[0] + "です");
-        //     //先にゴールに到達したプレイヤーの勝利を出力する処理
-        //     //addPlayerで作成したリストの順番を進める処理
-        //     if(this.position[0]>20) {
-        //         break;
-        //     }
-        // }
-        // System.out.println(players.get(0) + "さんの勝利");
-
         
-        // for(int i=0; i<10; i++) {
-        //     //
-        //     System.out.println("サイコロを振ってください");
-        //     //エンターキーを押して次に進む処理
-        //     //サイコロの出た目を出力する処理
-        //     int dice = this.dc.throwDice();
-        //     System.out.println(dice + "がでました。");
-        //     //出た目の数だけプレイヤーのポジションを進める処理
-
-        //     //プレイヤーの位置を出力
-        //     this.position = this.position + dice;
-        //     System.out.println("今の位置は" + position + "です");
-        //     //先にゴールに到達したプレイヤーの勝利を出力する処理
-        //     //addPlayerで作成したリストの順番を進める処理
-        // }
-        
-
-        //繰り返し
-            // プレイヤーがダイスを投げる処理
-            //出た目の数だけプレイヤーのポジションを進める処理
-            //addPlayerで作成したリストの順番を進める処理
-        //ループの終了
-        //先にゴールに到達したプレイヤーの勝利を出力する処理
-
-
-       }
+    }
 }
